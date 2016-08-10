@@ -2,7 +2,7 @@
 import { connect } from 'react-redux'
 import { fetchZen, saveCurrentZen } from '../modules/zen'
 
-import Zen from '../components/Zen'
+import Zen from 'components/Zen'
 
 import type { ZenObject } from '../interfaces/zen'
 

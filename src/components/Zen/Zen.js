@@ -1,6 +1,7 @@
 /* @flow */
 import React from 'react'
 import classes from './Zen.scss'
+import Nav from '../Nav'
 
 import type { ZenObject } from '../interfaces/zen'
 
@@ -13,6 +14,7 @@ type Props = {
 
 export const Zen = (props: Props) => (
   <div>
+    <Nav />
     <div>
       <h2 className={classes.zenHeader}>
         {props.zen ? props.zen.value : ''}

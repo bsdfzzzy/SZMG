@@ -2,3 +2,36 @@
   font-weight: bold;
   text-decoration: underline;
 }
+
+.navHeader a{
+    color: #b3b3b3;
+    text-decoration: none;
+    display: block;
+    height: inherit;
+    width: inherit;
+    text-align: center;
+    outline: none;
+}
+
+.navHeader li:hover{
+    cursor: pointer;
+    background: #4e4a4a;
+}
+
+.navHeader li{
+    height: 40px;
+    line-height: 40px;
+}
+
+.navLeftTop{
+  padding: 1em;
+  display: block;
+  color: #fcfcfc;
+  background: #2980B9;
+}
+
+.navLeftTop a{
+    color: white;
+    text-decoration: none;
+    outline: none;
+}

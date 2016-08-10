@@ -4,18 +4,29 @@ import classes from './Header.scss'
 
 export const Header = () => (
   <div>
-    <h1>React Redux Starter Kit</h1>
-    <IndexLink to='/' activeClassName={classes.activeRoute}>
-      Home
-    </IndexLink>
-    {' · '}
-    <Link to='/counter' activeClassName={classes.activeRoute}>
-      Counter
-    </Link>
-    {' · '}
-    <Link to='/zen' activeClassName={classes.activeRoute}>
-      Zen
-    </Link>
+    <div className={classes.navLeftTop}>
+      <img src='../../static/favicon.ico' alt="React" />
+      <IndexLink to='/'><h4>Welcome!</h4></IndexLink>
+    </div>
+    <div className={classes.navHeader}>
+      <ul>
+        <li>
+          <IndexLink to='/base' activeClassName={classes.activeRoute}>
+            巡检基础表
+          </IndexLink>
+        </li>
+        <li>
+          <Link to='/counter' activeClassName={classes.activeRoute}>
+            巡检事件表
+          </Link>
+        </li>
+        <li>
+          <Link to='/zen' activeClassName={classes.activeRoute}>
+            业务情况表
+          </Link>
+        </li>
+      </ul>
+    </div>
   </div>
 )
 

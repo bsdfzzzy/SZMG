@@ -1,6 +1,7 @@
 /* @flow */
 import React from 'react'
 import classes from './Counter.scss'
+import Nav from 'components/Nav'
 
 // FlowType annotations
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
 
 export const Counter = (props: Props) => (
   <div>
+    <Nav />
     <h2 className={classes.counterContainer}>
       Counter:
       {' '}

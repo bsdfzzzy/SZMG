@@ -9,10 +9,50 @@ import _debug from 'debug'
 import config from '../config'
 import webpackDevMiddleware from './middleware/webpack-dev'
 import webpackHMRMiddleware from './middleware/webpack-hmr'
+import _router from 'koa-router'
+import views from 'koa-views'
+import co from 'co'
+import json from 'koa-json'
+import onerror from 'koa-onerror'
+import _bodyparser from 'koa-bodyparser'
+import logger from 'koa-logger'
 
+const app = new Koa()
+const router = _router()
+const db = require('../models/index')
+const bodyparser = _bodyparser()
+const users = require('../server/api/userApi')
+const events = require('../server/api/eventApi')
+const bizs = require('../server/api/bizApi')
+const bases = require('../server/api/baseApi')
 const debug = _debug('app:server')
 const paths = config.utils_paths
-const app = new Koa()
+
+// middlewares
+app.use(convert(bodyparser));
+app.use(convert(json()));
+app.use(convert(logger()));
+app.use(require('koa-static')(__dirname + '/public'));
+
+app.use(views(__dirname + '/views', {
+  extension: 'jade'
+}));
+
+// logger
+app.use(async (ctx, next) => {
+  const start = new Date();
+  await next();
+  const ms = new Date() - start;
+  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
+});
+
+router.use('/users', users.routes(), users.allowedMethods());
+router.use('/events', events.routes(), events.allowedMethods());
+router.use('/bizs', bizs.routes(), bizs.allowedMethods());
+router.use('/bases', bases.routes(), bases.allowedMethods());
+
+app.use(router.routes(), router.allowedMethods());
+// response
 
 // Enable koa-proxy if it has been enabled in the config.
 if (config.proxy && config.proxy.enabled) {
@@ -56,5 +96,13 @@ if (config.env === 'development') {
   // server in production.
   app.use(convert(serve(paths.dist())))
 }
+
+app.on('error', function(err, ctx){
+  console.log(err)
+  logger.error('server error', err, ctx);
+});
+
+
+module.exports = app;
 
 export default app
