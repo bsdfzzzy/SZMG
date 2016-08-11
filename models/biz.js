@@ -34,6 +34,7 @@ export default (sequelize, DataTypes) => {
             allowNull: false,
         }
     },{
+        timestamps: false,
     });
     return Biz;
 }

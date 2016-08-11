@@ -16,12 +16,12 @@ export const Header = () => (
           </IndexLink>
         </li>
         <li>
-          <Link to='/counter' activeClassName={classes.activeRoute}>
+          <Link to='/event' activeClassName={classes.activeRoute}>
             巡检事件表
           </Link>
         </li>
         <li>
-          <Link to='/zen' activeClassName={classes.activeRoute}>
+          <Link to='/biz' activeClassName={classes.activeRoute}>
             业务情况表
           </Link>
         </li>

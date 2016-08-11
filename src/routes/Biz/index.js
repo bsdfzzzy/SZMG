@@ -1,23 +1,23 @@
 import { injectReducer } from '../../store/reducers'
 
 export default (store) => ({
-  path: 'zen',
+  path: 'biz',
   getComponent (nextState, next) {
     require.ensure([
-      './containers/ZenContainer',
-      './modules/zen'
+      './containers/BizContainer',
+      './modules/biz'
     ], (require) => {
       /*  These modules are lazily evaluated using require hook, and
       will not loaded until the router invokes this callback. */
-      const Zen = require('./containers/ZenContainer').default
-      const zenReducer = require('./modules/zen').default
+      const Biz = require('./containers/BizContainer').default
+      const bizReducer = require('./modules/biz').default
 
       injectReducer(store, {
-        key: 'zen',
-        reducer: zenReducer
+        key: 'biz',
+        reducer: bizReducer
       })
 
-      next(null, Zen)
+      next(null, Biz)
     })
   }
 })

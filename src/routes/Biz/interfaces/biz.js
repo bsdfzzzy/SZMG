@@ -1,14 +1,14 @@
 /* @flow */
 
-export type ZenObject = {
+export type BizObject = {
   id: number,
   value: string
 }
 
-export type ZenStateObject = {
+export type BizStateObject = {
   current: ?number,
   fetching: boolean,
   saved: Array<number>,
-  zens: Array<ZenObject>
+  bizs: Array<BizObject>
 }
 

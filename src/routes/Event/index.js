@@ -1,20 +1,20 @@
 import { injectReducer } from '../../store/reducers'
 
 export default (store) => ({
-  path: 'counter',
+  path: 'event',
   getComponent (nextState, next) {
     require.ensure([
-      './containers/CounterContainer',
-      './modules/counter'
+      './containers/EventContainer',
+      './modules/event'
     ], (require) => {
   /*  These modules are lazily evaluated using require hook, and
       will not loaded until the router invokes this callback. */
-      const Counter = require('./containers/CounterContainer').default
-      const reducer = require('./modules/counter').default
+      const Event = require('./containers/EventContainer').default
+      const reducer = require('./modules/event').default
 
-      injectReducer(store, { key: 'counter', reducer })
+      injectReducer(store, { key: 'event', reducer })
 
-      next(null, Counter)
+      next(null, Event)
     })
   }
 })

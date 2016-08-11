@@ -1,30 +1,51 @@
 import React from 'react'
 import classes from './Base.scss'
+import Nav from '../Nav'
 
 export default class Base extends React.Component {
   constructor(props) {
     super(props)
+    this.handleChangeSystem = this.handleChangeSystem.bind(this)
   }
+
+  handleChangeSystem(system) {
+    this.props.all.showBase(system)
+  }
+
   render () {
+    let items;
+    if(this.props.all.base.current.value){
+        let allBases = this.props.all.base.current.value
+        items = allBases.map((item, index) => {
+            let date = new Date(item.date)
+            return(
+                <tr>
+                    <td>{(date.getYear() + 1900) + '-' + (date.getMonth() + 1) + '-' + date.getDate()}</td>
+                    <td>{item.system}</td>
+                    <td>{item.subsystem}</td>
+                    <td>{item.supervisor_1}</td>
+                    <td>{item.supervisor_2}</td>
+                    <td>{item.supervisor_3}</td>
+                    <td>{item.inspector}</td>
+                    <td>{item.experiment}</td>
+                    <td>{item.IP}</td>
+                    <td>{item.type}</td>
+                    <td>{item.work}</td>
+                    <td>{item.category}</td>
+                    <td>{item.stateOrData}</td>
+                    <td>{item.More}</td>
+                </tr>
+            )
+        });
+    }
+    
     return (
   <div>
-    <nav className="navbar navbar-default">
-      <ul className='nav navbar nav-pills'>
-        <li role="presentation" className='nav-pills'><a href='#'>4楼DMZ区巡检表</a></li>
-        <li role="presentation" className='nav-pills'><a href='#'>4楼日常巡检表</a></li>
-        <li role="presentation" className='nav-pills'><a href='#'>5-1系统巡检表</a></li>
-        <li role="presentation" className='nav-pills'><a href='#'>5-2系统巡检表</a></li>
-        <li role="presentation" className='nav-pills'><a href='#'>5-3系统巡检表</a></li>
-        <li role="presentation" className='nav-pills'><a href='#'>6楼MDC巡检表</a></li>
-        <li role="presentation" className='nav-pills'><a href='#'>6楼业务巡检表</a></li>
-        <li role="presentation" className='nav-pills'><a href='#'>8楼系统巡检表</a></li>
-        <li role="presentation" className='nav-pills'><a href='#'>11楼系统巡检表</a></li>
-        <li role="presentation" className='nav-pills'><a href='#'>AVID系统日常巡查登记表</a></li>
-        <li role="presentation" className='nav-pills'><a href='#'>电视剧缩编系统巡检表</a></li>
-      </ul>
-    </nav>
+    <Nav changeSystem={this.handleChangeSystem} />
+    <button type="button" className="btn btn-info" style={{marginBottom: '20px'}}>添加一条信息</button>
+    <button type="button" className="btn btn-info" style={{marginBottom: '20px', marginLeft: '20px'}}>备用</button>
     <div className="table-responsive">
-    <table className='table table-hover'>
+    <table className='table table-hover table-bordered .table-condensed'>
         <thead>
             <tr>
                 <td>日期</td>
@@ -37,29 +58,14 @@ export default class Base extends React.Component {
                 <td>设备</td>
                 <td>设备管理IP</td>
                 <td>类别</td>
-                <td>巡检内容（软硬件定性与定量指标通用）</td>
+                <td>巡检内容</td>
                 <td>巡检指标类型</td>
                 <td>状态或数据记录</td>
                 <td>备注</td>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>日期</td>
-                <td>系统</td>
-                <td>系统子项</td>
-                <td>责任人A岗</td>
-                <td>责任人B岗</td>
-                <td>责任人C岗</td>
-                <td>巡检人</td>
-                <td>设备</td>
-                <td>设备管理IP</td>
-                <td>类别</td>
-                <td>巡检内容（软硬件定性与定量指标通用）</td>
-                <td>巡检指标类型</td>
-                <td>状态或数据记录</td>
-                <td>备注</td>
-            </tr>
+            {items}
         </tbody>
     </table>
     </div>

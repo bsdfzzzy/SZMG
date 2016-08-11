@@ -13,20 +13,16 @@ import Base from 'components/Base'
 export class BaseComponent extends Component {
   constructor(props) {
     super(props)
-    this.fetchAllBase = this.fetchAllBase.bind(this)
   }
   componentWillMount() {
-    if (!this.allBases) {
-      this.allBases = this.props.fetchBase('BASE_GETALL')
+    if (!this.props.base.current.value) {
+      this.props.fetchBase('GETALL')
     }
-  }
-  fetchAllBase() {
-    this.props.fetchBase('BASE_GETALL')
   }
   render() {
     return (
       <div>
-        <Base  allBases={this.allBases}/>
+        <Base all={this.props}/>
       </div>
     )
   }

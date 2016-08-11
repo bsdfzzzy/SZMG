@@ -2,18 +2,18 @@
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const REQUEST_BASE_ALL = 'BASE_GETALL'
-export const REQUEST_BASE_FOUR_DMZ = 'REQUEST_BASE_FOUR_DMZ'
-export const REQUEST_BASE_FOUR_NORMAL = 'REQUEST_BASE_FOUR_NORMAL'
-export const REQUEST_BASE_FIVE_ONE = 'REQUEST_BASE_FIVE_ONE'
-export const REQUEST_BASE_FIVE_TWO = 'REQUEST_BASE_FIVE_TWO'
-export const REQUEST_BASE_FIVE_THREE = 'REQUEST_BASE_FIVE_THREE'
-export const REQUEST_BASE_SIX_MDC = 'REQUEST_BASE_SIX_MDC'
-export const REQUEST_BASE_SIX_BIZ = 'REQUEST_BASE_SIX_BIZ'
-export const REQUEST_BASE_EIGHT = 'REQUEST_BASE_EIGHT'
-export const REQUEST_BASE_ELEVEN = 'REQUEST_BASE_ELEVEN'
-export const REQUEST_BASE_AVID = 'REQUEST_BASE_AVID'
-export const REQUEST_BASE_TV = 'REQUEST_BASE_TV'
+export const REQUEST_BASE_ALL = 'GETALL'
+export const REQUEST_BASE_FOUR_DMZ = 'BASE_FOUR_DMZ'
+export const REQUEST_BASE_FOUR_NORMAL = 'BASE_FOUR_NORMAL'
+export const REQUEST_BASE_FIVE_ONE = 'BASE_FIVE_ONE'
+export const REQUEST_BASE_FIVE_TWO = 'BASE_FIVE_TWO'
+export const REQUEST_BASE_FIVE_THREE = 'BASE_FIVE_THREE'
+export const REQUEST_BASE_SIX_MDC = 'BASE_SIX_MDC'
+export const REQUEST_BASE_SIX_BIZ = 'BASE_SIX_BIZ'
+export const REQUEST_BASE_EIGHT = 'BASE_EIGHT'
+export const REQUEST_BASE_ELEVEN = 'BASE_ELEVEN'
+export const REQUEST_BASE_AVID = 'BASE_AVID'
+export const REQUEST_BASE_TV = 'BASE_TV'
 export const REQUEST_BASE = 'REQUEST_BASE'
 export const RECIEVE_BASE = 'RECIEVE_BASE'
 export const SHOW_BASE = 'SHOW_BASE'
@@ -27,13 +27,12 @@ export function requestBase (style: string): Action {
   }
 }
 
-let availableId = 0
-export function recieveBase (value: string): Action {
+export function recieveBase (system, value: string): Action {
   return {
     type: RECIEVE_BASE,
+    system: system,
     value: {
-      value,
-      id: availableId++
+      value
     }
   }
 }
@@ -45,13 +44,13 @@ export function showBase (system: string): Action {
   }
 }
 
-export const fetchBase = (style: string): Function => {
+export const fetchBase = (system: string): Function => {
   return (dispatch: Function): Promise => {
-    dispatch(requestBase(style))
+    dispatch(requestBase(system))
 
-    return fetch(`/bases/${style}`)
+    return fetch(`/bases/${system}`)
       .then(data => data.text())
-      .then(text => dispatch(recieveBase(text)))
+      .then(text => dispatch(recieveBase(system, eval('(' + text + ')'))))
   }
 }
 
@@ -105,11 +104,11 @@ const ACTION_HANDLERS = {
   [REQUEST_BASE_FOUR_DMZ]: (state) => {
     return ({ ...state, fetching: true })
   },
-  [RECIEVE_BASE]: (state, action) => {
-    return ({...state, fetching: false, tables: state.tables.concat({type: action.type, value: action.value}), current: {type: action.type, value: action.value}})
+  [RECIEVE_BASE]: (state, action) => {  
+    return ({...state, fetching: false, tables: {type: action.system, value: action.value.value}, current: {type: action.system, value: action.value.value}})
   },
   [SHOW_BASE]: (state, action) => {
-    return state.current.type !== action.aim ? ({ ...state, current: state.tables.find((system) => system.type === aim)}) : state
+    return ( state.current.type !== undefined && state.current.type !== action.aim ) ? ( action.aim === 'GETALL' ? {...state, current: {type: action.aim, value: state.tables.value}} : { ...state, current: {type: action.aim, value: state.tables.value.filter((item) => item.system === action.aim)}}) : state
   }
 }
 
@@ -117,7 +116,7 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 
-const initialState = { fetching: false, current: [], tables: [] }
+const initialState = { fetching: false, current: [], tables: {} }
 
 export default function baseReducer (state: number = initialState, action: Action): number {
   const handler = ACTION_HANDLERS[action.type]
