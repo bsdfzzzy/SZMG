@@ -17,11 +17,12 @@ export const REQUEST_BASE_TV = 'BASE_TV'
 export const REQUEST_BASE = 'REQUEST_BASE'
 export const RECIEVE_BASE = 'RECIEVE_BASE'
 export const SHOW_BASE = 'SHOW_BASE'
+export const RECIEVE_SYSTEM = 'RECIEVE_SYSTEM'
 // ------------------------------------
 // Actions
 // ------------------------------------
 
-export function requestBase (style: string): Action {
+export function requestBase (style): Action {
   return {
     type: style
   }
@@ -37,14 +38,21 @@ export function recieveBase (system, value: string): Action {
   }
 }
 
-export function showBase (system: string): Action {
+export function showBase (system): Action {
   return {
     type: SHOW_BASE,
     aim: system
   }
 }
 
-export const fetchBase = (system: string): Function => {
+export function recieveSystem (systems) {
+  return {
+    type: RECIEVE_SYSTEM,
+    systems: systems
+  }
+}
+
+export const fetchBase = (system): Function => {
   return (dispatch: Function): Promise => {
     dispatch(requestBase(system))
 
@@ -54,11 +62,21 @@ export const fetchBase = (system: string): Function => {
   }
 }
 
+export const fetchSystem = () => {
+  return (dispatch) => {
+    return fetch('/systems/GETALL')
+      .then(data => data.text())
+      .then(text => dispatch(recieveSystem(eval('(' + text + ')'))))
+  }
+}
+
 export const actions = {
   requestBase,
   recieveBase,
   fetchBase,
-  showBase
+  showBase,
+  recieveSystem,
+  fetchSystem
 }
 
 // ------------------------------------
@@ -68,47 +86,14 @@ const ACTION_HANDLERS = {
   [REQUEST_BASE]: (state) => {
     return ({ ...state, fetching: true })
   },
-  [REQUEST_BASE_TV]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BASE_AVID]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BASE_ELEVEN]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BASE_EIGHT]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BASE_ALL]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BASE_SIX_BIZ]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BASE_SIX_MDC]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BASE_FIVE_THREE]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BASE_FIVE_TWO]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BASE_FIVE_ONE]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BASE_FOUR_NORMAL]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BASE_FOUR_DMZ]: (state) => {
-    return ({ ...state, fetching: true })
-  },
   [RECIEVE_BASE]: (state, action) => {  
     return ({...state, fetching: false, tables: {type: action.system, value: action.value.value}, current: {type: action.system, value: action.value.value}})
   },
   [SHOW_BASE]: (state, action) => {
     return ( state.current.type !== undefined && state.current.type !== action.aim ) ? ( action.aim === 'GETALL' ? {...state, current: {type: action.aim, value: state.tables.value}} : { ...state, current: {type: action.aim, value: state.tables.value.filter((item) => item.system === action.aim)}}) : state
+  },
+  [RECIEVE_SYSTEM]: (state, action) => {
+    return ({...state, systems: action.systems})
   }
 }
 
@@ -116,7 +101,7 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 
-const initialState = { fetching: false, current: [], tables: {} }
+const initialState = { fetching: false, current: [], tables: {}, systems: [] }
 
 export default function baseReducer (state: number = initialState, action: Action): number {
   const handler = ACTION_HANDLERS[action.type]

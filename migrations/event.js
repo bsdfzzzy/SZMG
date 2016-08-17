@@ -12,10 +12,13 @@ module.exports = {
             type: Sequelize.DATEONLY,
             allowNull: false,
         },
-        system: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
+        system_id: {
+                type: Sequelize.INTEGER,
+                references: {
+                    model: 'systems',
+                    key: 'id'
+                }
+            },
         event: {
             type: Sequelize.STRING,
             allowNull: false,
@@ -23,5 +26,8 @@ module.exports = {
     },{
         charset: 'utf8'
         }
-    )}
+    )},
+    down: function(queryInterface, Sequelize) {
+        return queryInterface.dropTable('events');
+    }
 };

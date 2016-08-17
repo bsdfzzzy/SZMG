@@ -18,6 +18,7 @@ export const REQUEST_BIZ_TV = 'TV'
 export const REQUEST_BIZ = 'REQUEST_BIZ'
 export const RECIEVE_BIZ = 'RECIEVE_BIZ'
 export const SHOW_BIZ = 'SHOW_BIZ'
+export const RECIEVE_SYSTEM = 'RECIEVE_SYSTEM'
 
 // ------------------------------------
 // Actions
@@ -46,6 +47,13 @@ export function showBiz (system: string): Action {
   }
 }
 
+export function recieveSystem (systems) {
+  return {
+    type: RECIEVE_SYSTEM,
+    systems: systems
+  }
+}
+
 export const fetchBiz = (system: string): Function => {
   return (dispatch: Function): Promise => {
     dispatch(requestBiz(system))
@@ -56,11 +64,21 @@ export const fetchBiz = (system: string): Function => {
   }
 }
 
+export const fetchSystem = () => {
+  return (dispatch) => {
+    return fetch('/systems/GETALL')
+      .then(data => data.text())
+      .then(text => dispatch(recieveSystem(eval('(' + text + ')'))))
+  }
+}
+
 export const actions = {
   requestBiz,
   recieveBiz,
   fetchBiz,
-  showBiz
+  showBiz,
+  recieveSystem,
+  fetchSystem
 }
 
 // ------------------------------------
@@ -71,47 +89,14 @@ const ACTION_HANDLERS = {
   [REQUEST_BIZ]: (state) => {
     return ({ ...state, fetching: true })
   },
-  [REQUEST_BIZ_TV]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BIZ_AVID]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BIZ_ELEVEN]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BIZ_EIGHT]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BIZ_ALL]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BIZ_SIX_BIZ]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BIZ_SIX_MDC]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BIZ_FIVE_THREE]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BIZ_FIVE_TWO]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BIZ_FIVE_ONE]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BIZ_FOUR_NORMAL]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_BIZ_FOUR_DMZ]: (state) => {
-    return ({ ...state, fetching: true })
-  },
   [RECIEVE_BIZ]: (state, action) => {
     return ({...state, fetching: false, tables: {type: action.system, value: action.value.value}, current: {type: action.system, value: action.value.value}})
   },
   [SHOW_BIZ]: (state, action) => {
     return ( state.current.type !== undefined && state.current.type !== action.aim ) ? ( action.aim === 'GETALL' ? {...state, current: {type: action.aim, value: state.tables.value}} : { ...state, current: {type: action.aim, value: state.tables.value.filter((item) => item.system === action.aim)}}) : state
+  },
+  [RECIEVE_SYSTEM]: (state, action) => {
+    return ({...state, systems: action.systems})
   }
 }
 

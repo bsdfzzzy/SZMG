@@ -15,8 +15,11 @@ export const REQUEST_EVENT_ELEVEN = 'ELEVEN'
 export const REQUEST_EVENT_AVID = 'AVID'
 export const REQUEST_EVENT_TV = 'TV'
 export const REQUEST_EVENT = 'REQUEST_EVENT'
+export const POST_EVENT = 'POST_EVENT'
 export const RECIEVE_EVENT = 'RECIEVE_EVENT'
+export const ADD_RESULT = 'ADD_RESULT'
 export const SHOW_EVENT = 'SHOW_EVENT'
+export const RECIEVE_SYSTEM = 'RECIEVE_SYSTEM'
 
 // ------------------------------------
 // Actions
@@ -36,7 +39,12 @@ export function requestEvent (style: string): Action {
   }
 }
 
-let availableId = 0
+export function postEvent (style: string): Action {
+  return {
+    type: style
+  }
+}
+
 export function recieveEvent (system, value: string): Action {
   return {
     type: RECIEVE_EVENT,
@@ -47,10 +55,26 @@ export function recieveEvent (system, value: string): Action {
   }
 }
 
+export function addResult (result) {
+  return {
+    type: ADD_RESULT,
+    add: result.add,
+    code: result.code,
+    err: result.err
+  }
+}
+
 export function showEvent (system: string): Action {
   return {
     type: SHOW_EVENT,
     aim: system
+  }
+}
+
+export function recieveSystem (systems) {
+  return {
+    type: RECIEVE_SYSTEM,
+    systems: systems
   }
 }
 
@@ -72,11 +96,32 @@ export const fetchEvent = (system: string): Function => {
   }
 }
 
+export const addEvent = (data) => {
+  return (dispatch) => {
+    dispatch(postEvent(data.system))
+
+    return fetch('/events/addOne')
+      .then(data => data.text())
+      .then(text => dispatch(addResult(text)))
+  }
+}
+
+export const fetchSystem = () => {
+  return (dispatch) => {
+    return fetch('/systems/GETALL')
+      .then(data => data.text())
+      .then(text => dispatch(recieveSystem(eval('(' + text + ')'))))
+  }
+}
+
 export const actions = {
   requestEvent,
   recieveEvent,
   fetchEvent,
-  showEvent
+  showEvent,
+  addEvent,
+  recieveSystem,
+  fetchSystem
 }
 
 // ------------------------------------
@@ -86,47 +131,20 @@ const ACTION_HANDLERS = {
   [REQUEST_EVENT]: (state) => {
     return ({ ...state, fetching: true })
   },
-  [REQUEST_EVENT_TV]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_EVENT_AVID]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_EVENT_ELEVEN]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_EVENT_EIGHT]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_EVENT_ALL]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_EVENT_SIX_BIZ]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_EVENT_SIX_MDC]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_EVENT_FIVE_THREE]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_EVENT_FIVE_TWO]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_EVENT_FIVE_ONE]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_EVENT_FOUR_NORMAL]: (state) => {
-    return ({ ...state, fetching: true })
-  },
-  [REQUEST_EVENT_FOUR_DMZ]: (state) => {
+  [POST_EVENT]: (state) => {
     return ({ ...state, fetching: true })
   },
   [RECIEVE_EVENT]: (state, action) => {
     return ({...state, fetching: false, tables: {type: action.system, value: action.value.value}, current: {type: action.system, value: action.value.value}})
   },
+  [ADD_RESULT]: (state, action) => {
+    return ({...state, fetching: false, tables: {type: state.tables.type, value: state.tables.value.concat(action.add)}, current: {type: state.current.type, value: (action.add.system === state.current.type) ? state.current.value.concat(action.add) : state.current.value}})
+  },
   [SHOW_EVENT]: (state, action) => {
     return ( state.current.type !== undefined && state.current.type !== action.aim ) ? ( action.aim === 'GETALL' ? {...state, current: {type: action.aim, value: state.tables.value}} : { ...state, current: {type: action.aim, value: state.tables.value.filter((item) => item.system === action.aim)}}) : state
+  },
+  [RECIEVE_SYSTEM]: (state, action) => {
+    return ({...state, systems: action.systems})
   }
 }
 

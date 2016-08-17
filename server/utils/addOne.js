@@ -1,4 +1,5 @@
 const sequelize = require('../../models/index');
+const System = sequelize.sequelize.models.systems;
 const User = sequelize.sequelize.models.users;
 const Biz = sequelize.sequelize.models.bizs;
 const Base = sequelize.sequelize.models.bases;
@@ -20,13 +21,11 @@ module.exports = (model) => {
             case Event: 
                 newItem = {
                     date: data.date,
-                    system: data.system,
                     event: data.event,
                 };
                 break;
             case Biz: 
                 newItem = {
-                    system: data.system,
                     column: data.column,
                     playStart: data.playStart,
                     playFinish: data.playFinish,
@@ -38,7 +37,6 @@ module.exports = (model) => {
             case Base:
                 newItem = {
                     date: data.date,
-                    system: data.system,
                     subsystem: data.subsystem,
                     supervisor_1: data.supervisor_1,
                     supervisor_2: data.supervisor_2,
@@ -53,13 +51,32 @@ module.exports = (model) => {
                     More: data.More
                 };
                 break;
+              default: 
+                break;
         }
         try {
-            let newOne = await model.create(newItem);
-            ctx.body = {code: 1, message: "success added", add: newOne};
+            let newSystem = await System.findOne({where: {id: data.system}}).then((system) => {
+                console.log(system)
+                return system
+            })
+            let newOne;
+            switch (model) {
+                case Biz:
+                    newOne = await newSystem.createBiz(newItem);
+                    break;
+                case Event:
+                    newOne = await newSystem.createEvent(newItem);
+                    break;
+                case Base:
+                    newOne = await newSystem.createBase(newItem);
+                    break;
+                default:
+                    break;
+            }
+            ctx.body = {code: 1, err: "", add: newOne};
         } catch (err) {
             console.log(err);
-            ctx.throw(500);
+            ctx.body = {code: 0, err: "something wrong with the server"}
         }
     }
 }

@@ -5,10 +5,10 @@ export default (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        system: {
+        /*system: {
             type: DataTypes.STRING,
             allowNull: false,
-        },
+        },*/
         column: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -35,6 +35,15 @@ export default (sequelize, DataTypes) => {
         }
     },{
         timestamps: false,
+        classMethods: {
+            associate: (models) => {
+                Biz.belongsTo(models.systems, {
+                    foreignKey: {
+                        allowNull: false
+                    }
+                });
+            }
+        }
     });
     return Biz;
 }

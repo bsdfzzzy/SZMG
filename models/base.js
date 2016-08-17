@@ -9,10 +9,13 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.DATEONLY,
             allowNull: false,
         },
-        system: {
+        /*system_id: {
             type: DataTypes.STRING,
             allowNull: false,
-        },
+            references: {
+                model: System
+            }
+        },*/
         subsystem: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -36,6 +39,15 @@ export default (sequelize, DataTypes) => {
         More: DataTypes.STRING
     }, {
         timestamps: false,
+        classMethods: {
+            associate: (models) => {
+                Base.belongsTo(models.systems, {
+                    foreignKey: {
+                        allowNull: false
+                    }
+                });
+            }
+        }
     });
     return Base;
 }

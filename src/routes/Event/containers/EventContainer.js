@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { fetchEvent, showEvent } from '../modules/event'
+import { fetchEvent, showEvent, fetchSystem } from '../modules/event'
 import React, { Component } from 'react'
 
 /*  This is a container component. Notice it does not contain any JSX,
@@ -14,6 +14,31 @@ export class EventComponent extends Component {
     super(props)
   }
   componentWillMount() {
+    let base_sys, biz_sys, event_sys;
+    if (this.props.base && this.props.base.systems) {
+       base_sys =  this.props.base.systems.length;
+    } else {
+      base_sys = 0;
+    }
+    if (this.props.biz && this.props.biz.systems) {
+       biz_sys =  this.props.biz.systems.length;
+    } else {
+      biz_sys = 0;
+    }
+    if (this.props.event && this.props.event.systems) {
+       event_sys =  this.props.event.systems.length;
+    } else {
+      event_sys = 0;
+    }
+    if (base_sys !== 0) {
+      this.systems = this.props.base.systems;
+    } else if (biz_sys !== 0) {
+      this.systems = this.props.biz.systems;
+    } else if (event_sys !== 0) {
+      this.systems = this.props.event.systems;
+    } else {
+      this.props.fetchSystem();
+    }
     if (!this.props.event.current.value) {
       this.props.fetchEvent('GETALL')
     }
@@ -33,7 +58,8 @@ export class EventComponent extends Component {
 
 const mapActionCreators = {
   fetchEvent,
-  showEvent
+  showEvent,
+  fetchSystem
 }
 
 const mapStateToProps = (state) => ({

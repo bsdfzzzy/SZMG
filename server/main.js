@@ -25,6 +25,7 @@ const users = require('../server/api/userApi')
 const events = require('../server/api/eventApi')
 const bizs = require('../server/api/bizApi')
 const bases = require('../server/api/baseApi')
+const systems = require('../server/api/systemApi')
 const debug = _debug('app:server')
 const paths = config.utils_paths
 
@@ -50,6 +51,7 @@ router.use('/users', users.routes(), users.allowedMethods());
 router.use('/events', events.routes(), events.allowedMethods());
 router.use('/bizs', bizs.routes(), bizs.allowedMethods());
 router.use('/bases', bases.routes(), bases.allowedMethods());
+router.use('/systems', systems.routes(), bases.allowedMethods());
 
 app.use(router.routes(), router.allowedMethods());
 // response

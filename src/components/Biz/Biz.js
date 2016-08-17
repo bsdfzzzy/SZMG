@@ -33,7 +33,7 @@ export default class Biz extends React.Component {
     }
     return (
   <div>
-    <Nav changeSystem={this.handleChangeSystem} />
+    <Nav changeSystem={this.handleChangeSystem} systems={this.props.all.biz.systems} />
     <div className="table-responsive">
     <table className='table table-hover table-bordered'>
         <thead>

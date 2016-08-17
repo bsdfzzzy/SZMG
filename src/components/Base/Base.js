@@ -41,7 +41,7 @@ export default class Base extends React.Component {
     
     return (
   <div>
-    <Nav changeSystem={this.handleChangeSystem} />
+    <Nav changeSystem={this.handleChangeSystem} systems={this.props.all.base.systems} />
     <button type="button" className="btn btn-info" style={{marginBottom: '20px'}}>添加一条信息</button>
     <button type="button" className="btn btn-info" style={{marginBottom: '20px', marginLeft: '20px'}}>备用</button>
     <div className="table-responsive">

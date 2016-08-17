@@ -10,10 +10,10 @@ export default (sequelize, DataTypes) => {
             defaultValue: DataTypes.NOW, 
             allowNull: false,
         },
-        system: {
+        /*system: {
             type: DataTypes.STRING,
             allowNull: false,
-        },
+        },*/
         event: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -21,6 +21,15 @@ export default (sequelize, DataTypes) => {
     }, {
         createdAt: false,
         updatedAt:false,
+        classMethods: {
+            associate: (models) => {
+                Event.belongsTo(models.systems, {
+                    foreignKey: {
+                        allowNull: false
+                    }
+                });
+            }
+        }
     });
     return Event;
 }

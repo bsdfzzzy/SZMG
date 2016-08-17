@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { fetchBase, showBase } from '../modules/base'
+import { fetchBase, showBase, fetchSystem } from '../modules/base'
 import React, { Component, PropTypes } from 'react'
 import Mock from 'mockjs'
 
@@ -15,6 +15,31 @@ export class BaseComponent extends Component {
     super(props)
   }
   componentWillMount() {
+    let base_sys, biz_sys, event_sys;
+    if (this.props.base && this.props.base.systems) {
+       base_sys =  this.props.base.systems.length;
+    } else {
+      base_sys = 0;
+    }
+    if (this.props.biz && this.props.biz.systems) {
+       biz_sys =  this.props.biz.systems.length;
+    } else {
+      biz_sys = 0;
+    }
+    if (this.props.event && this.props.event.systems) {
+       event_sys =  this.props.event.systems.length;
+    } else {
+      event_sys = 0;
+    }
+    if (base_sys !== 0) {
+      this.systems = this.props.base.systems;
+    } else if (biz_sys !== 0) {
+      this.systems = this.props.biz.systems;
+    } else if (event_sys !== 0) {
+      this.systems = this.props.event.systems;
+    } else {
+      this.props.fetchSystem();
+    }
     if (!this.props.base.current.value) {
       this.props.fetchBase('GETALL')
     }
@@ -34,7 +59,8 @@ export class BaseComponent extends Component {
 
 const mapActionCreators = {
   fetchBase,
-  showBase
+  showBase,
+  fetchSystem
 }
 
 const mapStateToProps = (state) => ({
