@@ -90,7 +90,7 @@ const ACTION_HANDLERS = {
     return ({...state, fetching: false, tables: {type: action.system, value: action.value.value}, current: {type: action.system, value: action.value.value}})
   },
   [SHOW_BASE]: (state, action) => {
-    return ( state.current.type !== undefined && state.current.type !== action.aim ) ? ( action.aim === 'GETALL' ? {...state, current: {type: action.aim, value: state.tables.value}} : { ...state, current: {type: action.aim, value: state.tables.value.filter((item) => item.system === action.aim)}}) : state
+    return ( state.current.type !== undefined && state.current.type.id !== action.aim ) ? ( action.aim === 'GETALL' ? {...state, current: {type: action.aim, value: state.tables.value}} : { ...state, current: {type: action.aim, value: state.tables.value.filter((item) => item.systemId === action.aim)}}) : state
   },
   [RECIEVE_SYSTEM]: (state, action) => {
     return ({...state, systems: action.systems})
@@ -103,7 +103,7 @@ const ACTION_HANDLERS = {
 
 const initialState = { fetching: false, current: [], tables: {}, systems: [] }
 
-export default function baseReducer (state: number = initialState, action: Action): number {
+export default function baseReducer (state = initialState, action: Action): number {
   const handler = ACTION_HANDLERS[action.type]
 
   return handler ? handler(state, action) : state

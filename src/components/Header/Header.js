@@ -5,8 +5,7 @@ import classes from './Header.scss'
 export const Header = () => (
   <div>
     <div className={classes.navLeftTop}>
-      <img src='../../static/favicon.ico' alt="React" />
-      <IndexLink to='/'><h4>Welcome!</h4></IndexLink>
+      <IndexLink to='/'><h4 className={classes.indexNav}>主页</h4></IndexLink>
     </div>
     <div className={classes.navHeader}>
       <ul>
@@ -23,6 +22,11 @@ export const Header = () => (
         <li>
           <Link to='/biz' activeClassName={classes.activeRoute}>
             业务情况表
+          </Link>
+        </li>
+        <li>
+          <Link to='/user' activeClassName={classes.activeRoute}>
+            用户管理
           </Link>
         </li>
       </ul>

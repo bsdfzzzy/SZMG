@@ -56,7 +56,6 @@ module.exports = (model) => {
         }
         try {
             let newSystem = await System.findOne({where: {id: data.system}}).then((system) => {
-                console.log(system)
                 return system
             })
             let newOne;
@@ -69,6 +68,21 @@ module.exports = (model) => {
                     break;
                 case Base:
                     newOne = await newSystem.createBase(newItem);
+                    break;
+                case User:
+                    newOne = await User.findOrCreate({where: {account: newItem.account}, defaults: {
+                        password: newItem.password,
+                        username: newItem.username,
+                        priority: newItem.priority
+                    }})
+                        .spread((user, created) => {
+                            if (created) {
+                                ctx.status = 200
+                                return (user.get({plain: true}))
+                            } else {
+                                ctx.body = {err: '帐号已存在'}
+                            }
+                        }) 
                     break;
                 default:
                     break;

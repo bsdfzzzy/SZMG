@@ -30,10 +30,9 @@ for i in range(0, 3):
                 VALUES('%d', '%d', '%s', '%s', '%s', '%d', '%s', '%s')" % \
                 (j, k, '《股市爱谁谁》', time.strftime('%Y-%m-%d %H:%M:%S'), time.strftime('%Y-%m-%d %H:%M:%S'), 2, time.strftime('%Y-%m-%d %H:%M:%S'), '正常')
 
-        try:
-            cursor.execute(sql)
-            db.commit()
-        except:
-            db.rollback()
+        
+        cursor.execute(sql)
+        db.commit()
+        
 
 db.close()

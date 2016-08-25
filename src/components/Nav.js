@@ -7,17 +7,28 @@ export default class Nav extends React.Component {
   }
   render(){
     let systems = this.props.systems;
-    let systems_ = systems.map((system) => {
-      return (
-        <NavItem changeSystem={this.props.changeSystem} system={system} />
+    if (systems) {
+      let systems_ = systems.map((system) => {
+        return (
+          <NavItem changeSystem={this.props.changeSystem} system={system} />
+        )
+      })
+      return(
+        <nav className="navbar navbar-default">
+          <ul className='nav navbar nav-pills'>
+            {systems_}
+            <li role="presentation" className='nav-pills'><a href='#' onClick={() => this.props.changeSystem('GETALL')}>全部</a></li>
+          </ul>
+        </nav>
       )
-    })
-    return(
-    <nav className="navbar navbar-default">
-      <ul className='nav navbar nav-pills'>
-        {systems_}
-        <li role="presentation" className='nav-pills'><a href='#' onClick={() => this.props.changeSystem('GETALL')}>全部</a></li>
-      </ul>
-    </nav>
-  )}
+    } else {
+      return (
+        <nav className="navbar navbar-default">
+          <ul className='nav navbar nav-pills'>
+            <li role="presentation" className='nav-pills'><a href='#' onClick={() => this.props.changeSystem('GETALL')}>全部</a></li>
+          </ul>
+        </nav>
+      )
+    }
+  }
 }

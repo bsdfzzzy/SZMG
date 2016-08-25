@@ -6,5 +6,6 @@ const addOne = require('../utils/addOne');
 
 router.get('/GETALL', findAll(System));
 router.post('/addOne', addOne(System));
+//router.put('/updateOne', updateOne(System));
 
 module.exports = router;

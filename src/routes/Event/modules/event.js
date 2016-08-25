@@ -64,7 +64,7 @@ export function addResult (result) {
   }
 }
 
-export function showEvent (system: string): Action {
+export function showEvent (system): Action {
   return {
     type: SHOW_EVENT,
     aim: system
@@ -141,7 +141,7 @@ const ACTION_HANDLERS = {
     return ({...state, fetching: false, tables: {type: state.tables.type, value: state.tables.value.concat(action.add)}, current: {type: state.current.type, value: (action.add.system === state.current.type) ? state.current.value.concat(action.add) : state.current.value}})
   },
   [SHOW_EVENT]: (state, action) => {
-    return ( state.current.type !== undefined && state.current.type !== action.aim ) ? ( action.aim === 'GETALL' ? {...state, current: {type: action.aim, value: state.tables.value}} : { ...state, current: {type: action.aim, value: state.tables.value.filter((item) => item.system === action.aim)}}) : state
+    return ( state.current.type !== undefined && state.current.type.id !== action.aim ) ? ( action.aim === 'GETALL' ? {...state, current: {type: action.aim, value: state.tables.value}} : { ...state, current: {type: action.aim, value: state.tables.value.filter((item) => item.systemId === action.aim)}}) : state
   },
   [RECIEVE_SYSTEM]: (state, action) => {
     return ({...state, systems: action.systems})

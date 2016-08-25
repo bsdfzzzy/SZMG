@@ -6,23 +6,20 @@ export default (store) => ({
       replace('/home')
     }
   },
-  path: 'biz',
+  path: 'user',
   getComponent (nextState, next) {
     require.ensure([
-      './containers/BizContainer',
-      './modules/biz'
+      './containers/UserContainer',
+      './modules/user'
     ], (require) => {
-      /*  These modules are lazily evaluated using require hook, and
+  /*  These modules are lazily evaluated using require hook, and
       will not loaded until the router invokes this callback. */
-      const Biz = require('./containers/BizContainer').default
-      const bizReducer = require('./modules/biz').default
+      const User = require('./containers/UserContainer').default
+      const reducer = require('./modules/user').default
 
-      injectReducer(store, {
-        key: 'biz',
-        reducer: bizReducer
-      })
+      injectReducer(store, { key: 'user', reducer })
 
-      next(null, Biz)
+      next(null, User)
     })
   }
 })

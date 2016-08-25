@@ -16,6 +16,7 @@ import json from 'koa-json'
 import onerror from 'koa-onerror'
 import _bodyparser from 'koa-bodyparser'
 import logger from 'koa-logger'
+import session from 'koa-session'
 
 const app = new Koa()
 const router = _router()
@@ -29,10 +30,12 @@ const systems = require('../server/api/systemApi')
 const debug = _debug('app:server')
 const paths = config.utils_paths
 
+app.keys = ['admin_secret']
 // middlewares
 app.use(convert(bodyparser));
 app.use(convert(json()));
 app.use(convert(logger()));
+app.use(convert(session({maxAge: 100}, app)))
 app.use(require('koa-static')(__dirname + '/public'));
 
 app.use(views(__dirname + '/views', {

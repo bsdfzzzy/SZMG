@@ -1,6 +1,12 @@
 import { injectReducer } from '../../store/reducers'
 
 export default (store) => ({
+  onEnter: (nextState, replace) => {
+    console.log(store.getState())
+    if (!store.getState().home || !store.getState().home.isLogin) {
+      replace('/home')
+    }
+  },
   path: 'base',
   getComponent (nextState, next) {
     require.ensure([
